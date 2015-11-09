@@ -217,7 +217,7 @@ static const CGFloat kK = 0;
         CGFloat constant = kPortraitMoveAndScaleLabelVerticalMargin;
         self.moveAndScaleLabelTopConstraint = [NSLayoutConstraint
                 constraintWithItem:self.moveAndScaleLabel
-                attribute:NSLayoutAttributeTop
+                attribute:NSLayoutAttributeTopMargin
                 relatedBy:NSLayoutRelationGreaterThanOrEqual
                 toItem:self.view
                 attribute:NSLayoutAttributeTop
@@ -236,7 +236,7 @@ static const CGFloat kK = 0;
                 toItem:self.view
                 attribute:NSLayoutAttributeCenterX
                 multiplier:1.0f
-                constant:-80.0f];
+                constant:-100.0f];
         [self.view addConstraint:constraint];
 
 
@@ -261,7 +261,7 @@ static const CGFloat kK = 0;
                 toItem:self.view
                 attribute:NSLayoutAttributeCenterX
                 multiplier:1.0f
-                constant:80.0f];
+                constant:100.0f];
         [self.view addConstraint:constraint];
 
 
@@ -278,11 +278,11 @@ static const CGFloat kK = 0;
         self.didSetupConstraints = YES;
     } else {
         if ([self isPortraitInterfaceOrientation]) {
-            self.moveAndScaleLabelTopConstraint.constant = kPortraitMoveAndScaleLabelVerticalMargin;
+//            self.moveAndScaleLabelTopConstraint.constant = kPortraitMoveAndScaleLabelVerticalMargin;
 //            self.cancelButtonBottomConstraint.constant = -kPortraitCancelAndChooseButtonsVerticalMargin;
 //            self.chooseButtonBottomConstraint.constant = -kPortraitCancelAndChooseButtonsVerticalMargin;
         } else {
-            self.moveAndScaleLabelTopConstraint.constant = kLandscapeMoveAndScaleLabelVerticalMargin;
+//            self.moveAndScaleLabelTopConstraint.constant = kLandscapeMoveAndScaleLabelVerticalMargin;
 //            self.cancelButtonBottomConstraint.constant = -kLandscapeCancelAndChooseButtonsVerticalMargin;
 //            self.chooseButtonBottomConstraint.constant = -kLandscapeCancelAndChooseButtonsVerticalMargin;
         }
