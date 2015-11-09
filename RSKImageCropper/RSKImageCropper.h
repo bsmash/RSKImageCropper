@@ -1,5 +1,5 @@
 //
-// RSKImageCropper.h TestTest
+    // RSKImageCropper.h
 //
 // Copyright (c) 2014-present Ruslan Skorb, http://ruslanskorb.com/
 //

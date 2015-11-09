@@ -40,14 +40,14 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
 
 /**
  Designated initializer. Initializes and returns a newly allocated view controller object with the specified image.
- 
+
  @param originalImage The image for cropping.
  */
 - (instancetype)initWithImage:(UIImage *)originalImage;
 
 /**
  Initializes and returns a newly allocated view controller object with the specified image and the specified crop mode.
- 
+
  @param originalImage The image for cropping.
  @param cropMode The mode for cropping.
  */
@@ -59,14 +59,14 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
 
 /**
  The receiver's delegate.
- 
+
  @discussion A `RSKImageCropViewControllerDelegate` delegate responds to messages sent by completing / canceling crop the image in the image crop view controller.
  */
 @property (weak, nonatomic) id<RSKImageCropViewControllerDelegate> delegate;
 
 /**
  The receiver's data source.
- 
+
  @discussion A `RSKImageCropViewControllerDataSource` data source provides a custom rect and a custom path for the mask.
  */
 @property (weak, nonatomic) id<RSKImageCropViewControllerDataSource> dataSource;
@@ -91,14 +91,14 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
 
 /**
  The rect of the mask.
- 
+
  @discussion Updating each time before the crop view lays out its subviews.
  */
 @property (assign, readonly, nonatomic) CGRect maskRect;
 
 /**
  The path of the mask.
- 
+
  @discussion Updating each time before the crop view lays out its subviews.
  */
 @property (strong, readonly, nonatomic) UIBezierPath *maskPath;
@@ -114,21 +114,21 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
 
 /**
  The crop rectangle.
- 
+
  @discussion The value is calculated at run time.
  */
 @property (readonly, nonatomic) CGRect cropRect;
 
 /**
  A value that specifies the current rotation angle of the image in radians.
- 
+
 @discussion The value is calculated at run time.
  */
 @property (readonly, nonatomic) CGFloat rotationAngle;
 
 /**
  A floating-point value that specifies the current scale factor applied to the image.
- 
+
  @discussion The value is calculated at run time.
  */
 @property (readonly, nonatomic) CGFloat zoomScale;
@@ -145,7 +145,7 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
 
 /**
  A Boolean value that controls whether the rotaion gesture is enabled. Default value is `NO`.
- 
+
  @discussion To support the rotation when `cropMode` is `RSKImageCropModeCustom` you must implement the data source method `imageCropViewControllerCustomMovementRect:`.
  */
 @property (assign, getter=isRotationEnabled, nonatomic) BOOL rotationEnabled;
@@ -162,12 +162,12 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
 /**
  The Cancel Button.
  */
-@property (strong, nonatomic, readonly) UIButton *cancelButton;
+@property (strong, nonatomic) UIButton *cancelButton;
 
 /**
  The Choose Button.
  */
-@property (strong, nonatomic, readonly) UIButton *chooseButton;
+@property (strong, nonatomic) UIButton *chooseButton;
 
 /// -------------------------------------------
 /// @name Checking of the Interface Orientation
@@ -175,7 +175,7 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
 
 /**
  Returns a Boolean value indicating whether the user interface is currently presented in a portrait orientation.
- 
+
  @return YES if the interface orientation is portrait, otherwise returns NO.
  */
 - (BOOL)isPortraitInterfaceOrientation;
@@ -189,22 +189,22 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
 
 /**
  Asks the data source a custom rect for the mask.
- 
+
  @param controller The crop view controller object to whom a rect is provided.
- 
+
  @return A custom rect for the mask.
- 
+
  @discussion Only valid if `cropMode` is `RSKImageCropModeCustom`.
  */
 - (CGRect)imageCropViewControllerCustomMaskRect:(RSKImageCropViewController *)controller;
 
 /**
  Asks the data source a custom path for the mask.
- 
+
  @param controller The crop view controller object to whom a path is provided.
- 
+
  @return A custom path for the mask.
- 
+
  @discussion Only valid if `cropMode` is `RSKImageCropModeCustom`.
  */
 - (UIBezierPath *)imageCropViewControllerCustomMaskPath:(RSKImageCropViewController *)controller;
@@ -213,11 +213,11 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
 
 /**
  Asks the data source a custom rect in which the image can be moved.
- 
+
  @param controller The crop view controller object to whom a rect is provided.
- 
+
  @return A custom rect in which the image can be moved.
- 
+
  @discussion Only valid if `cropMode` is `RSKImageCropModeCustom`. If you want to support the rotation  when `cropMode` is `RSKImageCropModeCustom` you must implement it. Will be marked as `required` in version `2.0.0`.
  */
 - (CGRect)imageCropViewControllerCustomMovementRect:(RSKImageCropViewController *)controller;
