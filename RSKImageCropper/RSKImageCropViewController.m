@@ -32,7 +32,7 @@
 
 static const CGFloat kPortraitCircleMaskRectInnerEdgeInset = 15.0f;
 static const CGFloat kPortraitSquareMaskRectInnerEdgeInset = 20.0f;
-static const CGFloat kPortraitMoveAndScaleLabelVerticalMargin = ([[UIScreen mainScreen] bounds].size.height/2 - 239/2)/2.0f;
+//static const CGFloat kPortraitMoveAndScaleLabelVerticalMargin = (([[UIScreen mainScreen] bounds].size.height/2 - 239/2)/2.0f);
 static const CGFloat kPortraitCancelAndChooseButtonsHorizontalMargin = 13.0f;
 static const CGFloat kPortraitCancelAndChooseButtonsVerticalMargin = 21.0f;
 
@@ -214,7 +214,7 @@ static const CGFloat kK = 0;
                 constant:0.0f];
         [self.view addConstraint:constraint];
 
-        CGFloat constant = kPortraitMoveAndScaleLabelVerticalMargin;
+        CGFloat constant = (([[UIScreen mainScreen] bounds].size.height/2 - 239/2)/2.0f);
         self.moveAndScaleLabelTopConstraint = [NSLayoutConstraint
                 constraintWithItem:self.moveAndScaleLabel
                 attribute:NSLayoutAttributeTopMargin
