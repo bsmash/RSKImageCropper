@@ -229,7 +229,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
                                          constant:constant];
         [self.view addConstraint:constraint];
 
-        constant = -kPortraitCancelAndChooseButtonsVerticalMargin;
+        constant = kPortraitCancelAndChooseButtonsVerticalMargin;
         self.cancelButtonBottomConstraint = [NSLayoutConstraint
                 constraintWithItem:self.cancelButton
                 attribute:NSLayoutAttributeBottom
@@ -244,7 +244,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
         // The button "Choose".
         // --------------------
 
-        constant = -kPortraitCancelAndChooseButtonsHorizontalMargin;
+        constant = kPortraitCancelAndChooseButtonsHorizontalMargin;
         constraint = [NSLayoutConstraint
                 constraintWithItem:self.chooseButton
                 attribute:NSLayoutAttributeRight
@@ -255,7 +255,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
                 constant:constant];
         [self.view addConstraint:constraint];
 
-        constant = -kPortraitCancelAndChooseButtonsVerticalMargin;
+        constant = kPortraitCancelAndChooseButtonsVerticalMargin;
         self.chooseButtonBottomConstraint = [NSLayoutConstraint
                 constraintWithItem:self.chooseButton
                 attribute:NSLayoutAttributeBottom
