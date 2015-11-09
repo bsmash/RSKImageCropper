@@ -46,9 +46,9 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 
 // K is a constant such that the accumulated error of our floating-point computations is definitely bounded by K units in the last place.
 #ifdef CGFLOAT_IS_DOUBLE
-    static const CGFloat kK = 9;
+static const CGFloat kK = 9;
 #else
-    static const CGFloat kK = 0;
+static const CGFloat kK = 0;
 #endif
 
 @interface RSKImageCropViewController () <UIGestureRecognizerDelegate>
@@ -204,35 +204,56 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
         // The label "Move and Scale".
         // ---------------------------
 
-        NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.moveAndScaleLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual
-                                                                         toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0f
-                                                                       constant:0.0f];
+        NSLayoutConstraint *constraint = [NSLayoutConstraint
+                constraintWithItem:self.moveAndScaleLabel
+                attribute:NSLayoutAttributeCenterX
+                relatedBy:NSLayoutRelationEqual
+                toItem:self.view
+                attribute:NSLayoutAttributeCenterX
+                multiplier:1.0f
+                constant:0.0f];
         [self.view addConstraint:constraint];
 
         CGFloat constant = kPortraitMoveAndScaleLabelVerticalMargin;
-        self.moveAndScaleLabelTopConstraint = [NSLayoutConstraint constraintWithItem:self.moveAndScaleLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
-                                                                              toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0f
-                                                                            constant:constant];
+        self.moveAndScaleLabelTopConstraint = [NSLayoutConstraint
+                constraintWithItem:self.moveAndScaleLabel
+                attribute:NSLayoutAttributeTop
+                relatedBy:NSLayoutRelationEqual
+                toItem:self.view
+                attribute:NSLayoutAttributeTop
+                multiplier:1.0f
+                constant:constant];
         [self.view addConstraint:self.moveAndScaleLabelTopConstraint];
 
         // --------------------
         // The button "Cancel".
         // --------------------
 
-        constant = kPortraitCancelAndChooseButtonsHorizontalMargin;
-        constraint = [NSLayoutConstraint constraintWithItem:self.cancelButton
-                                         attribute:NSLayoutAttributeLeft
-                                         relatedBy:NSLayoutRelationEqual
-                                         toItem:self.view
-                                         attribute:NSLayoutAttributeLeft
-                                         multiplier:1.0f
-                                         constant:constant];
+        constraint = [NSLayoutConstraint
+                constraintWithItem:self.cancelButton
+                attribute:NSLayoutAttributeCenterX
+                relatedBy:NSLayoutRelationLessThanOrEqual
+                toItem:self.view
+                attribute:NSLayoutAttributeCenterX
+                multiplier:1.0f
+                constant:-25.0f];
         [self.view addConstraint:constraint];
+
+        /*constant = kPortraitCancelAndChooseButtonsHorizontalMargin;
+        constraint = [NSLayoutConstraint
+                constraintWithItem:self.cancelButton
+                attribute:NSLayoutAttributeLeft
+                relatedBy:NSLayoutRelationEqual
+                toItem:self.view
+                attribute:NSLayoutAttributeLeft
+                multiplier:1.0f
+                constant:constant];
+        [self.view addConstraint:constraint];*/
 
         constant = kPortraitCancelAndChooseButtonsVerticalMargin;
         self.cancelButtonBottomConstraint = [NSLayoutConstraint
                 constraintWithItem:self.cancelButton
-                attribute:NSLayoutAttributeBottom
+                attribute:NSLayoutAttributeTopMargin
                 relatedBy:NSLayoutRelationEqual
                 toItem:self.view
                 attribute:NSLayoutAttributeTop
@@ -343,11 +364,11 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 //        }
 //        else
 //        {
-            _cancelButton = [[UIButton alloc] init];
-            _cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
-            [_cancelButton setTitle:RSKLocalizedString(@"Cancel", @"Cancel button") forState:UIControlStateNormal];
-            [_cancelButton addTarget:self action:@selector(onCancelButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
-            _cancelButton.opaque = NO;
+        _cancelButton = [[UIButton alloc] init];
+        _cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [_cancelButton setTitle:RSKLocalizedString(@"Cancel", @"Cancel button") forState:UIControlStateNormal];
+        [_cancelButton addTarget:self action:@selector(onCancelButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
+        _cancelButton.opaque = NO;
 //        }
     }
     return _cancelButton;
@@ -403,7 +424,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
     CGFloat ceilHeight = ceil(height);
 
     if (fabs(ceilWidth - width) < pow(10, kK) * RSK_EPSILON * fabs(ceilWidth + width) || fabs(ceilWidth - width) < RSK_MIN ||
-        fabs(ceilHeight - height) < pow(10, kK) * RSK_EPSILON * fabs(ceilHeight + height) || fabs(ceilHeight - height) < RSK_MIN) {
+            fabs(ceilHeight - height) < pow(10, kK) * RSK_EPSILON * fabs(ceilHeight + height) || fabs(ceilHeight - height) < RSK_MIN) {
 
         cropRect.size.width = ceilWidth;
         cropRect.size.height = ceilHeight;
@@ -517,12 +538,12 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         [UIView animateWithDuration:kLayoutImageScrollViewAnimationDuration
-                              delay:0.0
-                            options:UIViewAnimationOptionBeginFromCurrentState
-                         animations:^{
-                             [self layoutImageScrollView];
-                         }
-                         completion:nil];
+                delay:0.0
+                options:UIViewAnimationOptionBeginFromCurrentState
+                animations:^{
+                    [self layoutImageScrollView];
+                }
+                completion:nil];
     }
 }
 
