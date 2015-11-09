@@ -346,18 +346,11 @@ static const CGFloat kK = 0;
 {
     if (!_cancelButton)
     {
-//        if ([self.dataSource respondsToSelector:@selector(cancelButtonForViewControllerCustomMaskPath:)])
-//        {
-//            self.cancelButton
-//        }
-//        else
-//        {
         _cancelButton = [[UIButton alloc] init];
         _cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
         [_cancelButton setTitle:RSKLocalizedString(@"Cancel", @"Cancel button") forState:UIControlStateNormal];
         [_cancelButton addTarget:self action:@selector(onCancelButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
         _cancelButton.opaque = NO;
-//        }
     }
     return _cancelButton;
 }

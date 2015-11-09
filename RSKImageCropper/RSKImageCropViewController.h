@@ -209,16 +209,6 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
  */
 - (UIBezierPath *)imageCropViewControllerCustomMaskPath:(RSKImageCropViewController *)controller;
 
-/*
- *  If Implemented, overrides the cancelButton
- */
-- (UIButton *)cancelButtonForViewControllerCustomMaskPath:(RSKImageCropViewController *)controller;
-
-/*
- *  If Implemented, overrides the chooseButton
- */
-- (UIButton *)chooseButtonForViewControllerCustomMaskPath:(RSKImageCropViewController *)controller;
-
 @optional
 
 /**
