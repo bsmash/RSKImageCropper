@@ -218,7 +218,7 @@ static const CGFloat kK = 0;
         self.moveAndScaleLabelTopConstraint = [NSLayoutConstraint
                 constraintWithItem:self.moveAndScaleLabel
                 attribute:NSLayoutAttributeTop
-                relatedBy:NSLayoutRelationEqual
+                relatedBy:NSLayoutRelationGreaterThanOrEqual
                 toItem:self.view
                 attribute:NSLayoutAttributeTop
                 multiplier:1.0f
@@ -236,56 +236,44 @@ static const CGFloat kK = 0;
                 toItem:self.view
                 attribute:NSLayoutAttributeCenterX
                 multiplier:1.0f
-                constant:-25.0f];
+                constant:-80.0f];
         [self.view addConstraint:constraint];
 
-        /*constant = kPortraitCancelAndChooseButtonsHorizontalMargin;
+
         constraint = [NSLayoutConstraint
                 constraintWithItem:self.cancelButton
-                attribute:NSLayoutAttributeLeft
+                attribute:NSLayoutAttributeCenterY
                 relatedBy:NSLayoutRelationEqual
-                toItem:self.view
-                attribute:NSLayoutAttributeLeft
+                toItem:self.moveAndScaleLabel
+                attribute:NSLayoutAttributeCenterY
                 multiplier:1.0f
-                constant:constant];
-        [self.view addConstraint:constraint];*/
-
-        constant = kPortraitCancelAndChooseButtonsVerticalMargin;
-        self.cancelButtonBottomConstraint = [NSLayoutConstraint
-                constraintWithItem:self.cancelButton
-                attribute:NSLayoutAttributeTopMargin
-                relatedBy:NSLayoutRelationEqual
-                toItem:self.view
-                attribute:NSLayoutAttributeTop
-                multiplier:1.0f
-                constant:constant];
-        [self.view addConstraint:self.cancelButtonBottomConstraint];
+                constant:0.0f];
+        [self.view addConstraint:constraint];
 
         // --------------------
         // The button "Choose".
         // --------------------
 
-        constant = kPortraitCancelAndChooseButtonsHorizontalMargin;
         constraint = [NSLayoutConstraint
                 constraintWithItem:self.chooseButton
-                attribute:NSLayoutAttributeRight
-                relatedBy:NSLayoutRelationEqual
+                attribute:NSLayoutAttributeCenterX
+                relatedBy:NSLayoutRelationGreaterThanOrEqual
                 toItem:self.view
-                attribute:NSLayoutAttributeRight
+                attribute:NSLayoutAttributeCenterX
                 multiplier:1.0f
-                constant:constant];
+                constant:80.0f];
         [self.view addConstraint:constraint];
 
-        constant = kPortraitCancelAndChooseButtonsVerticalMargin;
-        self.chooseButtonBottomConstraint = [NSLayoutConstraint
+
+        constraint = [NSLayoutConstraint
                 constraintWithItem:self.chooseButton
-                attribute:NSLayoutAttributeBottom
+                attribute:NSLayoutAttributeCenterY
                 relatedBy:NSLayoutRelationEqual
-                toItem:self.view
-                attribute:NSLayoutAttributeTop
+                toItem:self.moveAndScaleLabel
+                attribute:NSLayoutAttributeCenterY
                 multiplier:1.0f
-                constant:constant];
-        [self.view addConstraint:self.chooseButtonBottomConstraint];
+                constant:0.0f];
+        [self.view addConstraint:constraint];
 
         self.didSetupConstraints = YES;
     } else {
