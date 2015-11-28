@@ -429,6 +429,12 @@ static const CGFloat kK = 0;
     return self.imageScrollView.zoomScale;
 }
 
+- (void)setZoomScale:(CGFloat)zoomScale animated:(BOOL)animated
+{
+    [self.imageScrollView setZoomScale:zoomScale
+                          animated:animated];
+}
+
 - (void)setAvoidEmptySpaceAroundImage:(BOOL)avoidEmptySpaceAroundImage
 {
     if (_avoidEmptySpaceAroundImage != avoidEmptySpaceAroundImage) {

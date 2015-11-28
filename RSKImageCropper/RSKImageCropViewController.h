@@ -71,6 +71,11 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
  */
 @property (weak, nonatomic) id<RSKImageCropViewControllerDataSource> dataSource;
 
+/*
+ *  Zooms to scale
+ */
+- (void)setZoomScale:(CGFloat)zoomScale animated:(BOOL)animated;
+
 ///--------------------------
 /// @name Accessing the Image
 ///--------------------------
