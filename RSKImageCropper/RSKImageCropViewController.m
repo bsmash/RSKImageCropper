@@ -435,6 +435,26 @@ static const CGFloat kK = 0;
                           animated:animated];
 }
 
+- (CGRect)visibleRect
+{
+    CGRect visibleRect;
+
+    visibleRect.origin = self.imageScrollView.contentOffset;
+    visibleRect.size = self.imageScrollView.bounds.size;
+
+    visibleRect.origin.x /= self.zoomScale;
+    visibleRect.origin.y /= self.zoomScale;
+    visibleRect.size.width /= self.zoomScale;
+    visibleRect.size.height /= self.zoomScale;
+    return visibleRect;
+}
+
+- (void)zoomToRect:(CGRect)rect animated:(BOOL)animated
+{
+    [self.imageScrollView zoomToRect:rect
+                          animated:animated];
+}
+
 - (void)setAvoidEmptySpaceAroundImage:(BOOL)avoidEmptySpaceAroundImage
 {
     if (_avoidEmptySpaceAroundImage != avoidEmptySpaceAroundImage) {

@@ -76,6 +76,16 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
  */
 - (void)setZoomScale:(CGFloat)zoomScale animated:(BOOL)animated;
 
+/*
+ * zooms to rect
+ */
+- (void)zoomToRect:(CGRect)rect animated:(BOOL)animated;
+
+/*
+ * Currently zoomed area
+ */
+- (CGRect)visibleRect;
+
 ///--------------------------
 /// @name Accessing the Image
 ///--------------------------
