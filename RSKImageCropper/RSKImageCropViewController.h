@@ -86,6 +86,8 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
  */
 - (CGRect)visibleRect;
 
+- (void)swapImageWithSameDimensions:(UIImage *)swapImage;
+
 ///--------------------------
 /// @name Accessing the Image
 ///--------------------------

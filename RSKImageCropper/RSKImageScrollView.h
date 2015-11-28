@@ -53,5 +53,6 @@
 @property (nonatomic, assign) BOOL aspectFill;
 
 - (void)displayImage:(UIImage *)image;
+- (void)swapImage:(UIImage *)image;
 
 @end

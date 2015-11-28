@@ -485,6 +485,11 @@ static const CGFloat kK = 0;
     }
 }
 
+- (void)swapImageWithSameDimensions:(UIImage *)swapImage
+{
+    [self.imageScrollView swapImage:swapImage];
+}
+
 - (void)setMaskPath:(UIBezierPath *)maskPath
 {
     if (![_maskPath isEqual:maskPath]) {
