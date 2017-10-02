@@ -55,14 +55,19 @@ static const CGFloat kK = 0;
 
 @property (assign, nonatomic) BOOL originalNavigationControllerNavigationBarHidden;
 @property (strong, nonatomic) UIImage *originalNavigationControllerNavigationBarShadowImage;
-@property (strong, nonatomic) UIColor *originalNavigationControllerViewBackgroundColor;
+@property (copy, nonatomic) UIColor *originalNavigationControllerViewBackgroundColor;
 @property (assign, nonatomic) BOOL originalStatusBarHidden;
 
 @property (strong, nonatomic) RSKImageScrollView *imageScrollView;
 @property (strong, nonatomic) RSKTouchView *overlayView;
 @property (strong, nonatomic) CAShapeLayer *maskLayer;
+
 @property (assign, nonatomic) CGRect maskRect;
-@property (strong, nonatomic) UIBezierPath *maskPath;
+@property (copy, nonatomic) UIBezierPath *maskPath;
+
+@property (readonly, nonatomic) CGRect rectForMaskPath;
+@property (readonly, nonatomic) CGRect rectForClipPath;
+
 @property (strong, nonatomic) UILabel *moveAndScaleLabel;
 
 @property (strong, nonatomic) UITapGestureRecognizer *doubleTapGestureRecognizer;
@@ -71,7 +76,9 @@ static const CGFloat kK = 0;
 @property (assign, nonatomic) BOOL didSetupConstraints;
 @property (strong, nonatomic) NSLayoutConstraint *moveAndScaleLabelTopConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *cancelButtonBottomConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *cancelButtonLeadingConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *chooseButtonBottomConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *chooseButtonTrailingConstraint;
 
 @end
 
@@ -84,9 +91,28 @@ static const CGFloat kK = 0;
     self = [super init];
     if (self) {
         _avoidEmptySpaceAroundImage = NO;
+        _alwaysBounceVertical = NO;
+        _alwaysBounceHorizontal = NO;
         _applyMaskToCroppedImage = NO;
+        _maskLayerLineWidth = 1.0;
         _rotationEnabled = NO;
         _cropMode = RSKImageCropModeCircle;
+
+        _portraitCircleMaskRectInnerEdgeInset = 15.0f;
+        _portraitSquareMaskRectInnerEdgeInset = 20.0f;
+        _portraitMoveAndScaleLabelTopAndCropViewTopVerticalSpace = 64.0f;
+        _portraitCropViewBottomAndCancelButtonBottomVerticalSpace = 21.0f;
+        _portraitCropViewBottomAndChooseButtonBottomVerticalSpace = 21.0f;
+        _portraitCancelButtonLeadingAndCropViewLeadingHorizontalSpace = 13.0f;
+        _portraitCropViewTrailingAndChooseButtonTrailingHorizontalSpace = 13.0;
+
+        _landscapeCircleMaskRectInnerEdgeInset = 45.0f;
+        _landscapeSquareMaskRectInnerEdgeInset = 45.0f;
+        _landscapeMoveAndScaleLabelTopAndCropViewTopVerticalSpace = 12.0f;
+        _landscapeCropViewBottomAndCancelButtonBottomVerticalSpace = 12.0f;
+        _landscapeCropViewBottomAndChooseButtonBottomVerticalSpace = 12.0f;
+        _landscapeCancelButtonLeadingAndCropViewLeadingHorizontalSpace = 13.0;
+        _landscapeCropViewTrailingAndChooseButtonTrailingHorizontalSpace = 13.0;
     }
     return self;
 }
@@ -278,13 +304,17 @@ static const CGFloat kK = 0;
         self.didSetupConstraints = YES;
     } else {
         if ([self isPortraitInterfaceOrientation]) {
-//            self.moveAndScaleLabelTopConstraint.constant = kPortraitMoveAndScaleLabelVerticalMargin;
-//            self.cancelButtonBottomConstraint.constant = -kPortraitCancelAndChooseButtonsVerticalMargin;
-//            self.chooseButtonBottomConstraint.constant = -kPortraitCancelAndChooseButtonsVerticalMargin;
+//            self.moveAndScaleLabelTopConstraint.constant = self.portraitMoveAndScaleLabelTopAndCropViewTopVerticalSpace;
+//            self.cancelButtonBottomConstraint.constant = self.portraitCropViewBottomAndCancelButtonBottomVerticalSpace;
+            self.cancelButtonLeadingConstraint.constant = self.portraitCancelButtonLeadingAndCropViewLeadingHorizontalSpace;
+//            self.chooseButtonBottomConstraint.constant = self.portraitCropViewBottomAndChooseButtonBottomVerticalSpace;
+            self.chooseButtonTrailingConstraint.constant = self.portraitCropViewTrailingAndChooseButtonTrailingHorizontalSpace;
         } else {
-//            self.moveAndScaleLabelTopConstraint.constant = kLandscapeMoveAndScaleLabelVerticalMargin;
-//            self.cancelButtonBottomConstraint.constant = -kLandscapeCancelAndChooseButtonsVerticalMargin;
-//            self.chooseButtonBottomConstraint.constant = -kLandscapeCancelAndChooseButtonsVerticalMargin;
+//            self.moveAndScaleLabelTopConstraint.constant = self.landscapeMoveAndScaleLabelTopAndCropViewTopVerticalSpace;
+//            self.cancelButtonBottomConstraint.constant = self.landscapeCropViewBottomAndCancelButtonBottomVerticalSpace;
+            self.cancelButtonLeadingConstraint.constant = self.landscapeCancelButtonLeadingAndCropViewLeadingHorizontalSpace;
+//            self.chooseButtonBottomConstraint.constant = self.landscapeCropViewBottomAndChooseButtonBottomVerticalSpace;
+            self.chooseButtonTrailingConstraint.constant = self.landscapeCropViewTrailingAndChooseButtonTrailingHorizontalSpace;
         }
     }
 }
@@ -297,6 +327,8 @@ static const CGFloat kK = 0;
         _imageScrollView = [[RSKImageScrollView alloc] init];
         _imageScrollView.clipsToBounds = NO;
         _imageScrollView.aspectFill = self.avoidEmptySpaceAroundImage;
+        _imageScrollView.alwaysBounceHorizontal = self.alwaysBounceHorizontal;
+        _imageScrollView.alwaysBounceVertical = self.alwaysBounceVertical;
     }
     return _imageScrollView;
 }
@@ -317,6 +349,8 @@ static const CGFloat kK = 0;
         _maskLayer = [CAShapeLayer layer];
         _maskLayer.fillRule = kCAFillRuleEvenOdd;
         _maskLayer.fillColor = self.maskLayerColor.CGColor;
+        _maskLayer.lineWidth = self.maskLayerLineWidth;
+        _maskLayer.strokeColor = self.maskLayerStrokeColor.CGColor;
     }
     return _maskLayer;
 }
@@ -417,6 +451,26 @@ static const CGFloat kK = 0;
     return cropRect;
 }
 
+- (CGRect)rectForClipPath
+{
+    if (!self.maskLayerStrokeColor) {
+        return self.overlayView.frame;
+    } else {
+        CGFloat maskLayerLineHalfWidth = self.maskLayerLineWidth / 2.0;
+        return CGRectInset(self.overlayView.frame, -maskLayerLineHalfWidth, -maskLayerLineHalfWidth);
+    }
+}
+
+- (CGRect)rectForMaskPath
+{
+    if (!self.maskLayerStrokeColor) {
+        return self.maskRect;
+    } else {
+        CGFloat maskLayerLineHalfWidth = self.maskLayerLineWidth / 2.0;
+        return CGRectInset(self.maskRect, maskLayerLineHalfWidth, maskLayerLineHalfWidth);
+    }
+}
+
 - (CGFloat)rotationAngle
 {
     CGAffineTransform transform = self.imageScrollView.transform;
@@ -464,6 +518,24 @@ static const CGFloat kK = 0;
     }
 }
 
+- (void)setAlwaysBounceVertical:(BOOL)alwaysBounceVertical
+{
+    if (_alwaysBounceVertical != alwaysBounceVertical) {
+        _alwaysBounceVertical = alwaysBounceVertical;
+
+        self.imageScrollView.alwaysBounceVertical = alwaysBounceVertical;
+    }
+}
+
+- (void)setAlwaysBounceHorizontal:(BOOL)alwaysBounceHorizontal
+{
+    if (_alwaysBounceHorizontal != alwaysBounceHorizontal) {
+        _alwaysBounceHorizontal = alwaysBounceHorizontal;
+
+        self.imageScrollView.alwaysBounceHorizontal = alwaysBounceHorizontal;
+    }
+}
+
 - (void)setCropMode:(RSKImageCropMode)cropMode
 {
     if (_cropMode != cropMode) {
@@ -495,7 +567,7 @@ static const CGFloat kK = 0;
     if (![_maskPath isEqual:maskPath]) {
         _maskPath = maskPath;
 
-        UIBezierPath *clipPath = [UIBezierPath bezierPathWithRect:self.overlayView.frame];
+        UIBezierPath *clipPath = [UIBezierPath bezierPathWithRect:self.rectForClipPath];
         [clipPath appendPath:maskPath];
         clipPath.usesEvenOddFillRule = YES;
 
@@ -524,6 +596,11 @@ static const CGFloat kK = 0;
 
         self.rotationGestureRecognizer.enabled = rotationEnabled;
     }
+}
+
+- (void)setZoomScale:(CGFloat)zoomScale
+{
+    self.imageScrollView.zoomScale = zoomScale;
 }
 
 #pragma mark - Action handling
@@ -772,9 +849,9 @@ static const CGFloat kK = 0;
 
             CGFloat diameter;
             if ([self isPortraitInterfaceOrientation]) {
-                diameter = MIN(viewWidth, viewHeight) - kPortraitCircleMaskRectInnerEdgeInset * 2;
+                diameter = MIN(viewWidth, viewHeight) - self.portraitCircleMaskRectInnerEdgeInset * 2;
             } else {
-                diameter = MIN(viewWidth, viewHeight) - kLandscapeCircleMaskRectInnerEdgeInset * 2;
+                diameter = MIN(viewWidth, viewHeight) - self.landscapeCircleMaskRectInnerEdgeInset * 2;
             }
 
             CGSize maskSize = CGSizeMake(diameter, diameter);
@@ -791,9 +868,9 @@ static const CGFloat kK = 0;
 
             CGFloat length;
             if ([self isPortraitInterfaceOrientation]) {
-                length = MIN(viewWidth, viewHeight) - kPortraitSquareMaskRectInnerEdgeInset * 2;
+                length = MIN(viewWidth, viewHeight) - self.portraitSquareMaskRectInnerEdgeInset * 2;
             } else {
-                length = MIN(viewWidth, viewHeight) - kLandscapeSquareMaskRectInnerEdgeInset * 2;
+                length = MIN(viewWidth, viewHeight) - self.landscapeSquareMaskRectInnerEdgeInset * 2;
             }
 
             CGSize maskSize = CGSizeMake(length, length);
@@ -805,11 +882,7 @@ static const CGFloat kK = 0;
             break;
         }
         case RSKImageCropModeCustom: {
-            if ([self.dataSource respondsToSelector:@selector(imageCropViewControllerCustomMaskRect:)]) {
-                self.maskRect = [self.dataSource imageCropViewControllerCustomMaskRect:self];
-            } else {
-                self.maskRect = CGRectNull;
-            }
+            self.maskRect = [self.dataSource imageCropViewControllerCustomMaskRect:self];
             break;
         }
     }
@@ -819,21 +892,35 @@ static const CGFloat kK = 0;
 {
     switch (self.cropMode) {
         case RSKImageCropModeCircle: {
-            self.maskPath = [UIBezierPath bezierPathWithOvalInRect:self.maskRect];
+            self.maskPath = [UIBezierPath bezierPathWithOvalInRect:self.rectForMaskPath];
             break;
         }
         case RSKImageCropModeSquare: {
-            self.maskPath = [UIBezierPath bezierPathWithRect:self.maskRect];
+            self.maskPath = [UIBezierPath bezierPathWithRect:self.rectForMaskPath];
             break;
         }
         case RSKImageCropModeCustom: {
-            if ([self.dataSource respondsToSelector:@selector(imageCropViewControllerCustomMaskPath:)]) {
-                self.maskPath = [self.dataSource imageCropViewControllerCustomMaskPath:self];
-            } else {
-                self.maskPath = nil;
-            }
+            self.maskPath = [self.dataSource imageCropViewControllerCustomMaskPath:self];
             break;
         }
+    }
+}
+
+- (UIImage *)croppedImage:(UIImage *)image cropRect:(CGRect)cropRect scale:(CGFloat)imageScale orientation:(UIImageOrientation)imageOrientation
+{
+    if (!image.images) {
+        CGImageRef croppedCGImage = CGImageCreateWithImageInRect(image.CGImage, cropRect);
+        UIImage *croppedImage = [UIImage imageWithCGImage:croppedCGImage scale:imageScale orientation:imageOrientation];
+        CGImageRelease(croppedCGImage);
+        return croppedImage;
+    } else {
+        UIImage *animatedImage = image;
+        NSMutableArray *croppedImages = [NSMutableArray array];
+        for (UIImage *image in animatedImage.images) {
+            UIImage *croppedImage = [self croppedImage:image cropRect:cropRect scale:imageScale orientation:imageOrientation];
+            [croppedImages addObject:croppedImage];
+        }
+        return [UIImage animatedImageWithImages:croppedImages duration:image.duration];
     }
 }
 
@@ -866,9 +953,9 @@ static const CGFloat kK = 0;
     cropRect = CGRectApplyAffineTransform(cropRect, CGAffineTransformMakeScale(imageScale, imageScale));
 
     // Step 2: create an image using the data contained within the specified rect.
-    CGImageRef croppedCGImage = CGImageCreateWithImageInRect(image.CGImage, cropRect);
-    UIImage *croppedImage = [UIImage imageWithCGImage:croppedCGImage scale:imageScale orientation:imageOrientation];
-    CGImageRelease(croppedCGImage);
+
+    UIImage *croppedImage = [self croppedImage:image cropRect:cropRect scale:imageScale orientation:imageOrientation];
+
 
     // Step 3: fix orientation of the cropped image.
     croppedImage = [croppedImage fixOrientation];
@@ -932,11 +1019,16 @@ static const CGFloat kK = 0;
     if ([self.delegate respondsToSelector:@selector(imageCropViewController:willCropImage:)]) {
         [self.delegate imageCropViewController:self willCropImage:self.originalImage];
     }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    UIImage *originalImage = self.originalImage;
+    RSKImageCropMode cropMode = self.cropMode;
         CGRect cropRect = self.cropRect;
         CGFloat rotationAngle = self.rotationAngle;
+        CGFloat zoomScale = self.imageScrollView.zoomScale;
+    UIBezierPath *maskPath = self.maskPath;
+    BOOL applyMaskToCroppedImage = self.applyMaskToCroppedImage;
 
-        UIImage *croppedImage = [self croppedImage:self.originalImage cropMode:self.cropMode cropRect:cropRect rotationAngle:rotationAngle zoomScale:self.imageScrollView.zoomScale maskPath:self.maskPath applyMaskToCroppedImage:self.applyMaskToCroppedImage];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIImage *croppedImage = [self croppedImage:originalImage cropMode:cropMode cropRect:cropRect rotationAngle:rotationAngle zoomScale:zoomScale maskPath:maskPath applyMaskToCroppedImage:applyMaskToCroppedImage];
 
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(imageCropViewController:didCropImage:usingCropRect:rotationAngle:)]) {
